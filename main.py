@@ -1,3 +1,7 @@
+#to generate slot machine numbers randomly
+
+import random
+
 #collecting user inputs(deposits and the bet)
 # 1.to get the user deposit
 
@@ -5,6 +9,19 @@
 MAX_LINES =3
 MAX_BET=100
 MIN_BET=1
+
+#set number of rows and columns that we are going to have in slot machine
+#imagine you have a 3 by 3 slot machine
+ROWS=3
+COLS=3
+
+#set the number of symbols in each column
+symbol_count={
+    "A":2,
+    "B":4,
+    "c":6,
+    "D":8
+}
 
 def deposit():
     # continuosly ask the user to enter the deposit amount until they give a valid amount
