@@ -5,7 +5,7 @@ import random
 #collecting user inputs(deposits and the bet)
 # 1.to get the user deposit
 
-#this is a global constant, which should be in all capitals( for the code to be nice and dynamic)
+#this is a global constant (for the code to be nice and dynamic), which should be in all capitals
 MAX_LINES =3
 MAX_BET=100
 MIN_BET=1
@@ -22,6 +22,37 @@ symbol_count={
     "c":6,
     "D":8
 }
+
+# the outcome of the slot machine using the above values
+def get_slot_machine_spin(rows,cols,symbols):
+    #generate(randomly) what symbols are gonna be in each column based on the frequency of the symbols that we have 
+    #randomly pick the number of rows inside of each column
+    #to do that , create a list that contains all of the different values possibly could select from, and to randomly choose 3 of those values(and after we choose one, we need to remove it from the list and choose again)
+    all_symbols=[]
+    #add every symbol in the dictionary into this list using for loop
+    for symbol, symbol_count in symbols.items():
+        for _ in range(symbol_count):
+            all_symbols.append(symbol)
+
+    #what values are going to every single column
+    #each of this nested lists will represents the values in our column
+    columns= [] #this is like columns=[ [], [], [] ]
+    for _ in range(cols):
+        column= []
+        #you need a copy of all_symbols (":"->represents copy) list, Because after we selected one symbol we need to remove it before we choose next
+        current_symbols=all_symbols[:]
+        for _ in range(rows):
+            value=random.choice(current_symbols)
+            current_symbols.remove(value)
+            #now add this value to the column
+            column.append(value)
+        columns.append(column)    
+    
+    return columns
+
+
+
+
 
 def deposit():
     # continuosly ask the user to enter the deposit amount until they give a valid amount
@@ -41,7 +72,7 @@ def deposit():
         
     return amount
 
-# collect the bets from the user(how much they want to bet, and how many lines they want to bet on, then can multiply the bet amount by lines)
+# 2. collect the bets from the user(how much they want to bet, and how many lines they want to bet on, then can multiply the bet amount by lines)
 # get number of lines
 def get_number_of_lines():
     #pick a number between 1 nd 3, because the numberb of lines we have is 3
