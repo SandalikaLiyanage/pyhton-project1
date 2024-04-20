@@ -16,14 +16,41 @@ ROWS=3
 COLS=3
 
 #set the number of symbols in each column
+#frequency of each symbol
 symbol_count={
     "A":2,
     "B":4,
     "c":6,
     "D":8
 }
+#value for a symbol
+symbol_value={
+    "A":5,
+    "B":4,
+    "c":3,
+    "D":2
+}
 
-# the outcome of the slot machine using the above values
+#we are going to check if we have three in a row(won or not), based on the value of the symbol we are going to multiply their bet and give them that amount
+def check_winnings(columns, lines, bet, values):
+    winnings=0
+    winning_lines=[]
+    for line in range(lines):
+    #check if we have same three in a row 
+        symbol=columns[0][line] #first column (in columns) has the first symbol of each row
+        for column in columns:
+            symbol_to_check=column[line]
+            if symbol != symbol_to_check:
+                break
+        else:
+            winnings+=values[symbol]*bet
+            winning_lines.append(line+1) #tells which lines they won on
+
+    return winnings,winning_lines
+
+
+
+# the outcome of the slot machine using the above values in symbol_count
 def get_slot_machine_spin(rows,cols,symbols):
     #generate(randomly) what symbols are gonna be in each column based on the frequency of the symbols that we have 
     #randomly pick the number of rows inside of each column
@@ -50,6 +77,8 @@ def get_slot_machine_spin(rows,cols,symbols):
     
     return columns
 
+
+
 def print_slot_machine(columns):
    #let's transpose our matrix so that symbols will show row wise
    for row in range(len(columns[0])):
@@ -59,8 +88,10 @@ def print_slot_machine(columns):
                 print(column[row], end=" | ")
             else:
                 print(column[row],end="")
-                
+
         print()
+
+
 
 def deposit():
     # continuosly ask the user to enter the deposit amount until they give a valid amount
@@ -79,6 +110,8 @@ def deposit():
             print("Please enter a number.")
         
     return amount
+
+
 
 # 2. collect the bets from the user(how much they want to bet, and how many lines they want to bet on, then can multiply the bet amount by lines)
 # get number of lines
@@ -99,6 +132,7 @@ def get_number_of_lines():
             print("Please enter a number.")
         
     return lines
+
 
 #amount that user wanna bet on each line
 def get_bet():
@@ -121,14 +155,14 @@ def get_bet():
 
 
 # if you want to rerun the program you can call the main function
-def main():
-    balance = deposit()
+def spin(balance):
     lines=get_number_of_lines()
 
     #bet should be within the balance amount
     while True:
         bet=get_bet()
         total_bet=bet*lines
+
         if total_bet > balance:
             print(f"You do not have enough to bet that amount, your current balance is: ${balance}")
         else:
@@ -136,8 +170,27 @@ def main():
 
     print(f"You are betting ${bet} on {lines} lines.Total bet is equal to: ${total_bet}")
 
+    
     #generate the slot machine
     slots=get_slot_machine_spin(ROWS,COLS,symbol_count) #slots are actually columns
     print_slot_machine(slots)
-    
+    winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
+    print(f"You won ${winnings}.")
+    print(f"You won on lines:", *winning_lines)
+    #how much they won or not from this spin
+    return winnings - total_bet #if they won $100 would they bet 15 then they only won 85
+
+
+def main():
+    balance = deposit()
+    while True:
+        print(f"Current balance is ${balance}")
+        answer = input("Press enter to play (q to quit).")
+        if answer == "q":
+            break
+        balance+=spin(balance)
+
+    print(f"You left with ${balance}")    
+   
+       
 main()
