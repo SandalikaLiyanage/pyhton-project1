@@ -50,9 +50,17 @@ def get_slot_machine_spin(rows,cols,symbols):
     
     return columns
 
-
-
-
+def print_slot_machine(columns):
+   #let's transpose our matrix so that symbols will show row wise
+   for row in range(len(columns[0])):
+       #loop though all of my columns and print the first value in it
+        for i,column in enumerate(columns):
+            if i!= len(columns)-1:
+                print(column[row], end=" | ")
+            else:
+                print(column[row],end="")
+                
+        print()
 
 def deposit():
     # continuosly ask the user to enter the deposit amount until they give a valid amount
@@ -128,5 +136,8 @@ def main():
 
     print(f"You are betting ${bet} on {lines} lines.Total bet is equal to: ${total_bet}")
 
+    #generate the slot machine
+    slots=get_slot_machine_spin(ROWS,COLS,symbol_count) #slots are actually columns
+    print_slot_machine(slots)
     
 main()
